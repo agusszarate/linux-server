@@ -2,3 +2,4 @@ n8n_data
 postgres_data
 client_secret_210056291302-cso2lfrdh6h6297bdms0nqr8nv7ghtqn.apps.googleusercontent.com.json
 .DS_Store
+openvpn-server/macbook.ovpn
