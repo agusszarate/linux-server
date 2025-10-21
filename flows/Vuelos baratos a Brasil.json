@@ -1,0 +1,617 @@
+{
+  "id": "pCH8oe3982YtuHv2",
+  "meta": {
+    "instanceId": "d51c66f27862f4c7714eba1c415639a532ac49fa35717e5c74e104fc8977f76d",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Vuelos baratos a Brasil",
+  "tags": [],
+  "nodes": [
+    {
+      "id": "6b3773ac-ab52-470a-9895-3135cc67864b",
+      "name": "⏰ Programar búsqueda",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -256,
+        -32
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "282c0da4-3d36-4ab4-a24a-de57d9846622",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        112
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "Ejecuta el flujo de manera automática según la frecuencia definida."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "6794b6ac-ab5a-49b9-b79e-94918b6c5fc5",
+      "name": "🌎 Buscar vuelos (Kiwi API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        64,
+        -32
+      ],
+      "parameters": {
+        "url": "https://api.skypicker.com/umbrella/v2/graphql?featureName=SearchReturnItinerariesQuery",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "{\n  \"query\": \"query SearchReturnItinerariesQuery($search: SearchReturnInput $filter: ItinerariesFilterInput $options: ItinerariesOptionsInput $conditions: Boolean!) { returnItineraries(search: $search, filter: $filter, options: $options) { __typename ... on AppError { error: message } ... on Itineraries { server { requestId environment packageVersion serverToken } metadata { eligibilityInformation { baggageEligibilityInformation { topFiveResultsBaggageEligibleForPrompt numberOfBags } } } itineraries { __typename ...TripInfo ...ItineraryDebug @include(if: $conditions) ... on ItineraryReturn { ... on Itinerary { __isItinerary: __typename __typename id shareId price { amount priceBeforeDiscount } priceEur { amount } provider { name code } bookingOptions { edges { node { bookingUrl } } } } } } } } } fragment TripInfo on Itinerary { __isItinerary: __typename } fragment ItineraryDebug on Itinerary { __isItinerary: __typename itineraryDebugData { debug } }\",\n  \"variables\": {\n    \"search\": {\n      \"itinerary\": {\n        \"source\": { \"ids\": [\"City:mendoza_md_ar\"] },\n        \"destination\": { \"ids\": [\"City:rio-de-janeiro_rj_br\"] },\n        \"outboundDepartureDate\": {\n          \"start\": \"2026-02-02T00:00:00\",\n          \"end\": \"2026-02-02T23:59:59\"\n        },\n        \"inboundDepartureDate\": {\n          \"start\": \"2026-02-13T00:00:00\",\n          \"end\": \"2026-02-13T23:59:59\"\n        }\n      },\n      \"passengers\": {\n        \"adults\": 2,\n        \"children\": 2,\n        \"infants\": 0,\n        \"adultsHoldBags\": [0, 0],\n        \"adultsHandBags\": [0, 0],\n        \"childrenHoldBags\": [0, 0],\n        \"childrenHandBags\": [0, 0]\n      },\n      \"cabinClass\": { \"cabinClass\": \"ECONOMY\", \"applyMixedClasses\": false }\n    },\n    \"filter\": {\n      \"allowReturnFromDifferentCity\": true,\n      \"allowChangeInboundDestination\": true,\n      \"allowChangeInboundSource\": true,\n      \"allowDifferentStationConnection\": true,\n      \"enableSelfTransfer\": true,\n      \"enableThrowAwayTicketing\": true,\n      \"enableTrueHiddenCity\": true,\n      \"transportTypes\": [\"FLIGHT\"],\n      \"contentProviders\": [\"KIWI\", \"FRESH\"],\n      \"flightsApiLimit\": 25,\n      \"limit\": 10\n    },\n    \"options\": {\n      \"sortBy\": \"PRICE\",\n      \"mergePriceDiffRule\": \"INCREASED\",\n      \"currency\": \"usd\",\n      \"locale\": \"es\",\n      \"market\": \"ar\",\n      \"partner\": \"skypicker\"\n    },\n    \"conditions\": false\n  }\n}\n\n\n",
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "kw-umbrella-token",
+              "value": "7dbb2953bcd5bc9c7c6152e61de1bd1e8f8be903f75a8b6c7caf3d474717be5e"
+            },
+            {
+              "name": "kw-skypicker-visitor-uniqid",
+              "value": "b61c1f2f-3d6b-4f9b-be17-da5a29d94c16"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "74e03b40-7d1e-4036-ab43-02aad41bfaf2",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        144
+      ],
+      "parameters": {
+        "height": 112,
+        "content": "Realiza la consulta a la API de Kiwi (GraphQL) con los parámetros configurados: origen, destino, fechas y pasajeros."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "29e5d398-299b-466e-a743-363810be30fd",
+      "name": "🧩 Extraer itinerarios",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        320,
+        -32
+      ],
+      "parameters": {
+        "functionCode": "// Array donde acumularemos todos los itinerarios\nconst itineraries = [];\n\n// Recorremos todos los items que vengan del nodo anterior\nfor (const item of items) {\n  const data = item.json;\n\n  // Extraemos itinerarios o array vacío si no existe\n  const list = data.data?.returnItineraries?.itineraries || [];\n\n  for (const i of list) {\n    // Convertimos a número el precio y agregamos timestamp\n    itineraries.push({\n      json: {\n        ...i,\n        priceNumber: Number(i.price.amount || 0),\n        fetchedAt: new Date().toISOString()\n      }\n    });\n  }\n}\n\n// Devolvemos cada itinerario como un item individual\nreturn itineraries;\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "025e99ba-b930-4894-9660-d6816b5c95d3",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        256,
+        128
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "Convierte la respuesta de Kiwi en una lista de itinerarios para procesarlos uno por uno."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "917be296-8589-4b41-9863-709a7f00e07f",
+      "name": "💾 Guardar vuelos en Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "position": [
+        592,
+        -32
+      ],
+      "parameters": {
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vuelos",
+          "cachedResultName": "vuelos"
+        },
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "columns": {
+          "value": {
+            "currency": "USD",
+            "provider": "={{ $json.provider.name }}",
+            "share_id": "={{ $json.shareId }}",
+            "max_price": 0,
+            "min_price": 0,
+            "fetched_at": "={{ $json.fetchedAt }}",
+            "booking_url": "={{ $json.bookingOptions.edges[0].node.bookingUrl }}",
+            "itinerary_id": "={{ $json.id }}",
+            "price_number": "={{ $json.priceNumber || Number($json.price.amount) }}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "number",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "itinerary_id",
+              "type": "string",
+              "display": true,
+              "required": true,
+              "displayName": "itinerary_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "share_id",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "share_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "provider",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "provider",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "price_number",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "price_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "currency",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fetched_at",
+              "type": "dateTime",
+              "display": true,
+              "required": false,
+              "displayName": "fetched_at",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "booking_url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "booking_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "min_price",
+              "type": "number",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "min_price",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "max_price",
+              "type": "number",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "max_price",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trend",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "trend",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "typeVersion": 2.6
+    },
+    {
+      "id": "760da6af-de28-43d2-b9f8-ec8be79a4275",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        144
+      ],
+      "parameters": {
+        "height": 112,
+        "content": "Inserta cada vuelo encontrado en la base de datos Postgres, incluyendo precio, proveedor y link de reserva."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "52265483-6f41-4a4a-9431-13f3ed506004",
+      "name": "📊 Consultar histórico de precios",
+      "type": "n8n-nodes-base.postgres",
+      "position": [
+        864,
+        80
+      ],
+      "parameters": {
+        "query": "SELECT\n    '{{ $json.itinerary_id }}' AS itinerary_id,\n    MIN(price_number) AS min_price,\n    MAX(price_number) AS max_price,\n    COUNT(*) AS total_records,\n    (SELECT MIN(price_number) FROM vuelos) AS min_price_global\nFROM vuelos\nWHERE itinerary_id = '{{ $json.itinerary_id }}';",
+        "options": {},
+        "operation": "executeQuery"
+      },
+      "typeVersion": 2.6
+    },
+    {
+      "id": "a39507c8-fd41-4dd7-b5c1-6dfb7caf76ae",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        256
+      ],
+      "parameters": {
+        "height": 112,
+        "content": "Consulta el precio mínimo y máximo histórico para el itinerario actual y calcula si hay un nuevo precio mínimo."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "667a1c5b-3906-4358-a4c6-10b2dff9174c",
+      "name": "Merge: 🔗 Combinar datos actuales + históricos",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1168,
+        -80
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "itinerary_id",
+              "field2": "itinerary_id"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.2
+    },
+    {
+      "id": "e337b42b-5ce2-4de3-a386-311358051609",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1104,
+        96
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "Combina la información del vuelo actual con los datos históricos de la base de datos."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f1ad232c-f17b-4fb5-a673-1cb60f402812",
+      "name": "Code: 🧮 Calcular indicadores de precio",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1488,
+        -80
+      ],
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const original = item.json;\n\n  // Precio actual\n  const currentPrice = Number(original.price_number || original.price?.amount || 0);\n\n  // Precios históricos desde SQL/Merge\n  const minPrice = Number(original.min_price || Infinity);\n  const maxPrice = Number(original.max_price || 0);\n\n  // Nuevo: mínimo histórico global (viene del SQL)\n  const minPriceGlobal = Number(original.min_price_global || Infinity);\n\n  // Tendencia (opcional si guardaste últimos 3 precios)\n  const lastPrices = original.last_prices || []; // ej: [2100, 2150, 2200]\n  let trend = 'Estable';\n  if (lastPrices.length === 3) {\n    if (lastPrices[0] < lastPrices[2]) trend = 'Bajando';\n    if (lastPrices[0] > lastPrices[2]) trend = 'Subiendo';\n  }\n\n  // Detectamos si es nuevo mínimo por itinerario\n  const isNewLow = currentPrice < minPrice || minPrice === 0 || isNaN(minPrice);\n\n  // Detectamos si es nuevo mínimo global\n  const isNewLowGlobal = currentPrice <= minPriceGlobal || isNaN(minPriceGlobal);\n\n  // Booking URL desde GraphQL (primera opción)\n  const bookingUrl = original.booking_url\n                  ? `https://www.kiwi.com${original.booking_url}`\n                  : (original.bookingOptions?.edges?.[0]?.node?.bookingUrl \n                     ? `https://www.kiwi.com${original.bookingOptions.edges[0].node.bookingUrl}` \n                     : null);\n\n  return {\n    json: {\n      // Claves normalizadas para DB\n      itinerary_id: original.itinerary_id || original.id,\n      share_id: original.share_id || original.shareId,\n      provider: original.provider?.name || original.provider || 'Kiwi.com',\n      booking_url: bookingUrl,       // ✅ Para DB\n\n      // Claves útiles para nodos siguientes\n      bookingUrl,                    // ✅ Para Telegram\n      currentPrice,\n      minPrice: isFinite(minPrice) ? minPrice : null,\n      maxPrice,\n      minPriceGlobal: isFinite(minPriceGlobal) ? minPriceGlobal : null,\n      trend,\n      isNewLow,\n      isNewLowGlobal,                 // ✅ Nuevo campo para detectar mínimos globales\n      fetched_at: original.fetchedAt || original.fetched_at || new Date().toISOString()\n    }\n  };\n});\n\n\n\n\n\n\n"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "68b70062-7886-4236-b343-647ee4c86eac",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1424,
+        80
+      ],
+      "parameters": {
+        "height": 96,
+        "content": "Calcula si el vuelo es un nuevo mínimo histórico, agrega tendencia de precios y prepara los datos para el mensaje."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "840828a7-fc63-409d-89f8-4bf9af393fc4",
+      "name": "If: 🚦 ¿Es un precio mínimo histórico?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1776,
+        16
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "5def938c-a8c8-4293-8031-c39d81458b9c",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isNewLow }}",
+              "rightValue": "true"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "e7139b41-fdef-4d7d-a915-9124f3d6694c",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1712,
+        176
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "Solo permite avanzar al mensaje destacado si el vuelo es el más barato registrado"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5ea568a7-109a-46ea-b12d-c472adab7cd2",
+      "name": "📝 Formatear mensaje para Telegram",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2096,
+        -208
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8eff6beb-4503-4e09-9b55-61d51bcd9534",
+              "name": "message",
+              "type": "string",
+              "value": "={{ \n  $json.isNewLowGlobal \n    ? \"🚀 *¡Nuevo precio mínimo histórico global!* 🚀\" \n    : (\n        $json.isNewLow \n          ? \"🔥 *Nuevo precio mínimo para este itinerario!* 🔥\" \n          : \"📊 *Resumen de vuelo MZA → Río*\"\n      ) \n}}\n\n💰 *Precio actual:* {{$json.currentPrice}} USD\n📉 *Mínimo histórico del itinerario:* {{$json.minPrice || 'N/A'}} USD\n🌍 *Mínimo histórico global:* {{$json.minPriceGlobal || 'N/A'}} USD\n📈 *Tendencia:* {{$json.trend || 'Estable'}}\n🔗 [Reservar en Kiwi]({{$json.bookingUrl || 'https://www.kiwi.com'}})\n"
+            },
+            {
+              "id": "58b91531-e12e-4c09-b6c9-8edafd48de56",
+              "name": "",
+              "type": "string",
+              "value": "="
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "dc315fac-cb75-4c58-a215-eb83de8cc686",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2032,
+        -32
+      ],
+      "parameters": {
+        "height": 112,
+        "content": "Crea un mensaje atractivo y legible para Telegram, incluyendo precio actual, mínimo histórico y link de reserva."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "124b5e13-705d-4e12-b3bf-1090c677af1b",
+      "name": "📲 Enviar notificación a Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2416,
+        -208
+      ],
+      "webhookId": "341cfdd5-a9c4-43da-a169-fbd52b9b687c",
+      "parameters": {
+        "text": "={{ $json.message }}",
+        "chatId": "179556574",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "68610381-f993-441d-8622-88bf56bf17bb",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2352,
+        -32
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "Envía el mensaje final al canal o chat configurado en Telegram."
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ed843d82-a162-430a-b74d-9b6a1eb101a5",
+  "connections": {
+    "⏰ Programar búsqueda": {
+      "main": [
+        [
+          {
+            "node": "🌎 Buscar vuelos (Kiwi API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧩 Extraer itinerarios": {
+      "main": [
+        [
+          {
+            "node": "💾 Guardar vuelos en Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🌎 Buscar vuelos (Kiwi API)": {
+      "main": [
+        [
+          {
+            "node": "🧩 Extraer itinerarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Guardar vuelos en Postgres": {
+      "main": [
+        [
+          {
+            "node": "📊 Consultar histórico de precios",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge: 🔗 Combinar datos actuales + históricos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Consultar histórico de precios": {
+      "main": [
+        [
+          {
+            "node": "Merge: 🔗 Combinar datos actuales + históricos",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "📝 Formatear mensaje para Telegram": {
+      "main": [
+        [
+          {
+            "node": "📲 Enviar notificación a Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: 🧮 Calcular indicadores de precio": {
+      "main": [
+        [
+          {
+            "node": "If: 🚦 ¿Es un precio mínimo histórico?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📝 Formatear mensaje para Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: 🚦 ¿Es un precio mínimo histórico?": {
+      "main": [
+        [
+          {
+            "node": "📝 Formatear mensaje para Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge: 🔗 Combinar datos actuales + históricos": {
+      "main": [
+        [
+          {
+            "node": "Code: 🧮 Calcular indicadores de precio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
