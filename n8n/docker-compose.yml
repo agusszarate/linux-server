@@ -28,7 +28,7 @@ services:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=general
+      - DB_POSTGRESDB_DATABASE=n8n_postgres
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=n8n_password
       - N8N_ENCRYPTION_KEY=your-encryption-key-change-this
