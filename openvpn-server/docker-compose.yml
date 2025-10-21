@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  openvpn:
+    image: kylemanna/openvpn
+    container_name: openvpn
+    ports:
+      - "1194:1194/udp"  # Puerto estándar de OpenVPN
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./openvpn-data:/etc/openvpn
+    restart: unless-stopped
