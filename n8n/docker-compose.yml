@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: n8n
       POSTGRES_PASSWORD: n8n_password
-      POSTGRES_DB: n8n_flights
+      POSTGRES_DB: n8n_postgres
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
