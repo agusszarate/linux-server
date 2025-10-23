@@ -1,95 +1,118 @@
-# Linux Server - Configuración de Servicios
+# Linux Server - Services Configuration
 
-Configuración completa de un servidor Linux con servicios Docker para uso personal.
+Complete configuration of a Linux server with Docker services for personal use.
 
-## Servicios Incluidos
+## Included Services
 
 ### 🌐 [Nginx Proxy Manager](nginx-proxy-manager/)
-Proxy reverso con gestión automática de certificados SSL/TLS.
-- Puertos: 80, 443, 81 (admin)
+
+Reverse proxy with automatic SSL/TLS certificate management.
+
+- Ports: 80, 443, 81 (admin)
 - Panel: http://localhost:81
 
 ### 🔒 [OpenVPN Server](openvpn-server/)
-Servidor VPN para acceso remoto seguro.
-- Puerto: 1194/UDP
-- Generación de clientes incluida
+
+VPN server for secure remote access.
+
+- Port: 1194/UDP
+- Client generation included
 
 ### 🛡️ [AdGuard Home](adguardhome/)
-Bloqueador de anuncios y rastreadores a nivel DNS.
-- Puerto DNS: 53
+
+DNS-level ad and tracker blocker.
+
+- DNS Port: 53
 - Panel: http://localhost:8081
 
 ### 🤖 [n8n](n8n/)
-Plataforma de automatización de workflows.
-- Puerto: 5678
-- Interfaz: http://localhost:5678
-- Base de datos: PostgreSQL 16
+
+Workflow automation platform.
+
+- Port: 5678
+- Interface: http://localhost:5678
+- Database: PostgreSQL 16
 
 ### 🦆 [DuckDNS](duckdns/)
-DNS dinámico para mantener actualizada la IP del servidor.
-- Dominio: agus-server.duckdns.org
 
-## Inicio Rápido
+Dynamic DNS to keep the server IP updated.
 
-### Iniciar todos los servicios
+- Domain: agus-server.duckdns.org
+
+### 📊 [Glances](glances/)
+
+Real-time system resource monitoring with web interface.
+
+- Port: 61208
+- Interface: http://localhost:61208
+
+## Quick Start
+
+### Start all services
 
 ```bash
-# Iniciar Nginx Proxy Manager
+# Start Nginx Proxy Manager
 cd nginx-proxy-manager && docker-compose up -d
 
-# Iniciar OpenVPN
+# Start OpenVPN
 cd ../openvpn-server && docker-compose up -d
 
-# Iniciar AdGuard Home
+# Start AdGuard Home
 cd ../adguardhome && docker-compose up -d
 
-# Iniciar n8n
+# Start n8n
 cd ../n8n && docker-compose up -d
+
+# Start Glances
+cd ../glances && docker-compose up -d
 ```
 
-### Detener todos los servicios
+### Stop all services
 
 ```bash
 docker-compose -f nginx-proxy-manager/docker-compose.yml down
 docker-compose -f openvpn-server/docker-compose.yml down
 docker-compose -f adguardhome/docker-compose.yml down
 docker-compose -f n8n/docker-compose.yml down
+docker-compose -f glances/docker-compose.yml down
 ```
 
-## Configuración Inicial
+## Initial Setup
 
-1. **Nginx Proxy Manager**: Cambiar credenciales por defecto
-2. **AdGuard Home**: Configurar filtros y lista de bloqueo
-3. **n8n**: Cambiar `N8N_ENCRYPTION_KEY` en producción
-4. **DuckDNS**: Agregar `duck.sh` a crontab para actualización automática
+1. **Nginx Proxy Manager**: Change default credentials
+2. **AdGuard Home**: Configure filters and blocklist
+3. **n8n**: Change `N8N_ENCRYPTION_KEY` in production
+4. **DuckDNS**: Add `duck.sh` to crontab for automatic updates
 
-## Puertos Utilizados
+## Ports in Use
 
-| Puerto | Servicio | Protocolo | Descripción |
-|--------|----------|-----------|-------------|
-| 80 | NPM | TCP | HTTP |
-| 443 | NPM | TCP | HTTPS |
-| 81 | NPM | TCP | Admin Panel |
-| 53 | AdGuard | TCP/UDP | DNS |
-| 8081 | AdGuard | TCP | Admin Panel |
-| 1194 | OpenVPN | UDP | VPN |
-| 5678 | n8n | TCP | Web Interface |
-| 5432 | PostgreSQL | TCP | Database (n8n) |
+| Port  | Service    | Protocol | Description          |
+| ----- | ---------- | -------- | -------------------- |
+| 80    | NPM        | TCP      | HTTP                 |
+| 443   | NPM        | TCP      | HTTPS                |
+| 81    | NPM        | TCP      | Admin Panel          |
+| 53    | AdGuard    | TCP/UDP  | DNS                  |
+| 8081  | AdGuard    | TCP      | Admin Panel          |
+| 1194  | OpenVPN    | UDP      | VPN                  |
+| 5678  | n8n        | TCP      | Web Interface        |
+| 5432  | PostgreSQL | TCP      | Database (n8n)       |
+| 61208 | Glances    | TCP      | Monitoring Interface |
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 linux-server/
-├── nginx-proxy-manager/    # Proxy reverso y SSL
-├── openvpn-server/         # Servidor VPN
+├── nginx-proxy-manager/    # Reverse proxy and SSL
+├── openvpn-server/         # VPN server
 ├── adguardhome/            # DNS ad-blocker
-├── n8n/                    # Automatización
-└── duckdns/                # DNS dinámico
+├── n8n/                    # Automation
+├── duckdns/                # Dynamic DNS
+└── glances/                # System monitoring
 ```
 
-## Notas de Seguridad
+## Security Notes
 
-- Cambiar todas las credenciales por defecto
-- Revisar y actualizar el archivo `.gitignore` para no versionar datos sensibles
-- Configurar firewall para exponer solo los puertos necesarios
-- Mantener los contenedores actualizados regularmente
+- Change all default credentials
+- Review and update `.gitignore` to avoid versioning sensitive data
+- Configure firewall to expose only necessary ports
+- Keep containers updated regularly
