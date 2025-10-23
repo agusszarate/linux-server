@@ -5,7 +5,7 @@ services:
     ports:
       - "8090:3000"
     environment:
-      - HOMEPAGE_ALLOWED_HOSTS=192.168.1.84,home.home.com,home.com
+      - HOMEPAGE_ALLOWED_HOSTS=192.168.1.84,dashboard.home.com
     volumes:
       - ./config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
