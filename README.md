@@ -46,6 +46,14 @@ Real-time system resource monitoring with web interface.
 - Port: 61208
 - Interface: http://localhost:61208
 
+### 🏠 [Homepage](homepage/)
+
+Modern dashboard for organizing all your services in one place.
+
+- Port: 3000
+- Interface: http://localhost:3000
+- Docker integration enabled
+
 ## Quick Start
 
 ### Start all services
@@ -65,6 +73,9 @@ cd ../n8n && docker-compose up -d
 
 # Start Glances
 cd ../glances && docker-compose up -d
+
+# Start Homepage
+cd ../homepage && docker-compose up -d
 ```
 
 ### Stop all services
@@ -75,6 +86,7 @@ docker-compose -f openvpn-server/docker-compose.yml down
 docker-compose -f adguardhome/docker-compose.yml down
 docker-compose -f n8n/docker-compose.yml down
 docker-compose -f glances/docker-compose.yml down
+docker-compose -f homepage/docker-compose.yml down
 ```
 
 ## Initial Setup
@@ -97,6 +109,7 @@ docker-compose -f glances/docker-compose.yml down
 | 5678  | n8n        | TCP      | Web Interface        |
 | 5432  | PostgreSQL | TCP      | Database (n8n)       |
 | 61208 | Glances    | TCP      | Monitoring Interface |
+| 3000  | Homepage   | TCP      | Dashboard            |
 
 ## Project Structure
 
@@ -107,7 +120,8 @@ linux-server/
 ├── adguardhome/            # DNS ad-blocker
 ├── n8n/                    # Automation
 ├── duckdns/                # Dynamic DNS
-└── glances/                # System monitoring
+├── glances/                # System monitoring
+└── homepage/               # Services dashboard
 ```
 
 ## Security Notes
