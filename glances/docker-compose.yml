@@ -1,0 +1,15 @@
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    ports:
+      # El puerto 61208 es el estándar de Glances
+      - "61208:61208"
+    environment:
+      # Necesario para que Glances pueda leer la CPU del host
+      - GID=0 
+    pid: host # Necesario para que GlANCES vea todos los procesos
+    volumes:
+      # Necesario para que Glances pueda conectarse a Docker
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
