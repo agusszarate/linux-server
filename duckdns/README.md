@@ -1,21 +1,22 @@
 # DuckDNS
 
-Servicio de DNS dinámico que mantiene actualizada la dirección IP del servidor.
+Dynamic DNS service that keeps the server IP address updated.
 
-## Configuración
+## Configuration
 
-- **Dominio**: agus-server.duckdns.org
-- **Script**: `duck.sh` actualiza la IP automáticamente
+- **Domain**: agus-server.duckdns.org
+- **Script**: `duck.sh` automatically updates the IP
 
-## Uso
+## Usage
 
 ```bash
 ./duck.sh
 ```
 
-## Automatización
+## Automation
 
-Agregar a crontab para ejecutar cada 5 minutos:
+Add to crontab to run every 5 minutes:
+
 ```
 */5 * * * * /path/to/duckdns/duck.sh
 ```

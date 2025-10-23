@@ -1,29 +1,30 @@
 # Nginx Proxy Manager
 
-Servidor proxy reverso con gestión de certificados SSL/TLS automática.
+Reverse proxy server with automatic SSL/TLS certificate management.
 
-## Puertos
+## Ports
 
-- **80**: HTTP (tráfico web)
-- **443**: HTTPS (tráfico web seguro)
-- **81**: Panel de administración de NPM
+- **80**: HTTP (web traffic)
+- **443**: HTTPS (secure web traffic)
+- **81**: NPM admin panel
 
-## Inicio
+## Start
 
 ```bash
 docker-compose up -d
 ```
 
-## Acceso
+## Access
 
-Panel de administración: http://localhost:81
+Admin panel: http://localhost:81
 
-**Credenciales por defecto:**
+**Default credentials:**
+
 - Email: admin@example.com
 - Password: changeme
 
-**IMPORTANTE**: Cambiar las credenciales en el primer inicio.
+**IMPORTANT**: Change credentials on first login.
 
-## Función
+## Function
 
-Gestiona el acceso a todos los servicios internos mediante dominios y genera certificados SSL automáticamente con Let's Encrypt.
+Manages access to all internal services through domains and automatically generates SSL certificates with Let's Encrypt.

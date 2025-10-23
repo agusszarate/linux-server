@@ -80,7 +80,7 @@ docker-compose -f glances/docker-compose.yml down
 ## Initial Setup
 
 1. **Nginx Proxy Manager**: Change default credentials
-2. **AdGuard Home**: Configure filters and blocklist
+2. **AdGuard Home**: Configure filters and blocklists
 3. **n8n**: Change `N8N_ENCRYPTION_KEY` in production
 4. **DuckDNS**: Add `duck.sh` to crontab for automatic updates
 

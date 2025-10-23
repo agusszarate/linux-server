@@ -1,23 +1,23 @@
 # OpenVPN Server
 
-Servidor VPN para acceso remoto seguro a la red local.
+VPN server for secure remote access to the local network.
 
-## Puertos
+## Ports
 
-- **1194/UDP**: Puerto estándar de OpenVPN
+- **1194/UDP**: OpenVPN standard port
 
-## Inicio
+## Start
 
 ```bash
 docker-compose up -d
 ```
 
-## Archivos de configuración
+## Configuration Files
 
-- **openvpn-data/**: Datos y certificados del servidor
-- **macbook.ovpn**: Configuración de cliente (no versionada en git)
+- **openvpn-data/**: Server data and certificates
+- **macbook.ovpn**: Client configuration (not versioned in git)
 
-## Generar nuevo cliente
+## Generate New Client
 
 ```bash
 docker exec -it openvpn ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
