@@ -5,7 +5,7 @@ services:
     image: drone/drone:2
     container_name: drone_server
     ports:
-      - "8090:80" # Drone UI port
+      - "3001:80" # Drone UI port
       - "9000:9000" # For runners to connect
     volumes:
       - ./drone-server-data:/data
