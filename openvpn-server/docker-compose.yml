@@ -3,8 +3,7 @@ services:
   openvpn:
     image: kylemanna/openvpn
     container_name: openvpn
-    ports:
-      - "1194:1194/udp"  # Puerto estándar de OpenVPN
+    network_mode: host
     cap_add:
       - NET_ADMIN
     volumes:
