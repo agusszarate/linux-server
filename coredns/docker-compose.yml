@@ -1,0 +1,10 @@
+services:
+  coredns:
+    image: coredns/coredns
+    restart: unless-stopped
+    volumes:
+      - ./Corefile:/root/Corefile
+    command: -conf /root/Corefile
+    ports:
+      - "${TAILSCALE_IP}:53:53/udp"
+      - "${TAILSCALE_IP}:53:53/tcp"

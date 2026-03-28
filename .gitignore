@@ -7,3 +7,4 @@ openvpn-server/macbook.ovpn
 .env
 
 drone-server-data/
+.claude
