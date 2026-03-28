@@ -1,0 +1,10 @@
+# docker-compose.yml
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=America/Argentina/Buenos_Aires
